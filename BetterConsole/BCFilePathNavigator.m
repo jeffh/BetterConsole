@@ -43,13 +43,13 @@
         CFNotificationCenterAddObserver(
             CFNotificationCenterGetLocalCenter(),
             NULL, BCFilePathNavigator_Handler,
-            (CFStringRef)NSTextViewDidChangeSelectionNotification,
-            textView, CFNotificationSuspensionBehaviorDeliverImmediately);
+            (__bridge CFStringRef)NSTextViewDidChangeSelectionNotification,
+            (__bridge const void *)(textView), CFNotificationSuspensionBehaviorDeliverImmediately);
     }
 }
 
 void BCFilePathNavigator_Handler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-    NSTextView *textView = (NSTextView *)object;
+    NSTextView *textView = (__bridge NSTextView *)object;
     NSRange range = textView.selectedRange;
 
     if (range.length == 0 && textView.textStorage.length > range.location) {
@@ -69,7 +69,7 @@ void BCFilePathNavigator_Handler(CFNotificationCenterRef center, void *observer,
                         [filePath stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""]];
         }
 
-        NSNumberFormatter* formatter = [[[NSNumberFormatter alloc] init] autorelease];
+        NSNumberFormatter* formatter = [[NSNumberFormatter alloc] init];
         NSUInteger lineNumber = [[formatter numberFromString:[components objectAtIndex:1]] unsignedIntegerValue];
 
         [BCFilePathNavigator bestEditorContext:^(id editorContext){
@@ -117,10 +117,10 @@ void BCFilePathNavigator_Handler(CFNotificationCenterRef center, void *observer,
 
 + (void)openFilePath:(NSString *)filePath lineNumber:(NSUInteger)lineNumber inEditorContext:(id)editorContext {
     id location =
-        [[[NSClassFromString(@"DVTTextDocumentLocation") alloc]
+        [[NSClassFromString(@"DVTTextDocumentLocation") alloc]
             initWithDocumentURL:[NSURL fileURLWithPath:filePath]
             timestamp:nil
-            lineRange:NSMakeRange(MAX(0, lineNumber-1), 1)] autorelease];
+            lineRange:NSMakeRange(MAX(0, lineNumber-1), 1)];
 
     [editorContext openEditorOpenSpecifier:
         [NSClassFromString(@"IDEEditorOpenSpecifier")

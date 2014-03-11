@@ -13,8 +13,8 @@
         CFNotificationCenterAddObserver(
             CFNotificationCenterGetLocalCenter(),
             NULL, BCColorHighlighter_Handler,
-            (CFStringRef)NSTextStorageDidProcessEditingNotification,
-            textView.textStorage, CFNotificationSuspensionBehaviorDeliverImmediately);
+            (__bridge CFStringRef)NSTextStorageDidProcessEditingNotification,
+            (__bridge const void *)(textView.textStorage), CFNotificationSuspensionBehaviorDeliverImmediately);
     }
 }
 
@@ -94,7 +94,7 @@ void BCColorHighlighter_Highlight(NSTextStorage *textStorage) {
 
 void BCColorHighlighter_Handler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
     BCTimeLog(@"BetterConsole - ColorHightlighter") {
-        NSTextStorage *textStorage = (NSTextStorage *)object;
+        NSTextStorage *textStorage = (__bridge NSTextStorage *)object;
         BCColorHighlighter_Highlight(textStorage);
     }
 }

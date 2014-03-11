@@ -14,8 +14,8 @@
         CFNotificationCenterAddObserver(
             CFNotificationCenterGetLocalCenter(),
             NULL, BCFilePathHighlighter_Handler,
-            (CFStringRef)NSTextStorageDidProcessEditingNotification,
-            textView.textStorage, CFNotificationSuspensionBehaviorDeliverImmediately);
+            (__bridge CFStringRef)NSTextStorageDidProcessEditingNotification,
+            (__bridge const void *)(textView.textStorage), CFNotificationSuspensionBehaviorDeliverImmediately);
     }
 }
 
@@ -68,7 +68,7 @@ void BCFilePathHighlighter_highlightFilePathRanges(NSTextStorage *textStorage, N
 
 void BCFilePathHighlighter_Handler(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
     BCTimeLog(@"BetterConsole - FilePathHightlighter") {
-        NSTextStorage *textStorage = (NSTextStorage *)object;
+        NSTextStorage *textStorage = (__bridge NSTextStorage *)object;
         NSArray *filePathRanges = BCFilePathHighlighter_findFilePathRanges(textStorage);
         BCFilePathHighlighter_highlightFilePathRanges(textStorage, filePathRanges);
     }
